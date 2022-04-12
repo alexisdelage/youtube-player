@@ -1,0 +1,13 @@
+<!-- <mat-form-field id="searchbar" appearance="outline">
+  <input id="custom-search" matInput type="search" placeholder="Search">
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field> -->
+
+<form class="search-form">
+  <mat-form-field floatLabel="never" appearance="standard">
+    <span matPrefix></span>
+    <input type="search" matInput placeholder="Search" name="search"> <!-- [(ngModel)]= "search">-->
+    <button class="search-icon" matSuffix mat-icon-button><mat-icon>search</mat-icon></button>
+  </mat-form-field>
+  <br>
+</form>
