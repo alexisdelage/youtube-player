@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { getVideoIdFromUrl, getPictureLink } from '../utils';
-import Video from '../video';
+import Video from '../interfaces';
 
 @Component({
   selector: 'app-bookmarks',

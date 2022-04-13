@@ -23,11 +23,12 @@ ul {
       img {
         height: 3rem;
         display: block;
-        margin: 5px;
+        margin: 8px 5px;
       }
 
       span {
         white-space: normal;
+        overflow-wrap: anywhere;
         display: flex;
         text-align: left;
         line-height: normal;

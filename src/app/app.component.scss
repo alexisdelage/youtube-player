@@ -1,19 +1,26 @@
-.example-spacer {
+
+.navbar {
+  .logo {
+    margin-right: 0.5rem;
+  }
+  .brand {
+    color: white;
+    text-decoration: none;
+  }
+  .example-spacer {
     flex: 1 1 auto;
-}
-
-.logo {
-  margin-right: 0.5rem;
+  }
 }
 
 
-.sidenav {
-  width: 25rem;
-  max-width: 30%;
+.container {
+  height: calc(100% - 64px);
+  
+  .sidenav {
+    width: 25rem;
+    max-width: 30%;
+  }
 }
 
 
-.brand {
-  color: white;
-  text-decoration: none;
-}
+

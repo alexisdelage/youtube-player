@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { getVideoIdFromUrl, getPictureLink } from '../utils';
-import Video from '../video';
+import { TemplateVideo } from '../interfaces';
 
 @Component({
   selector: 'app-history',
@@ -9,7 +9,7 @@ import Video from '../video';
 })
 export class HistoryComponent implements OnInit {
 
-  public videoHistory: Video[] = [];
+  public videoHistory: TemplateVideo[] = [];
 
   constructor() { }
 
@@ -47,7 +47,7 @@ export class HistoryComponent implements OnInit {
         originalUrl: url,
         internUrl: `/?search=${url}`,
         pictureUrl: getPictureLink(videoID)
-      } as Video
+      } as TemplateVideo
     });
   }
 

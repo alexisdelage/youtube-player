@@ -27,21 +27,21 @@ app.use((req, res, next) => {
 app.listen(8000, () => console.log("Server started!"));
 
 
-app.get("/getHistoryList", async (req, res) => {
-    const historyList = await History.find();
+app.get("/history", async (req, res) => {
+    const historyList = await History.find().sort({ date: -1 });
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(historyList));
 });
 
 
-app.get("/getBookmarksList", async (req, res) => {
+app.get("/bookmark", async (req, res) => {
   const bookmarksList = await Bookmark.find();
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(bookmarksList));
 });
 
 
-app.post("/addHistory", async (req, res) => {
+app.post("/history", async (req, res) => {
   const videoUrl = req.body.url;
   // we check if there is already the video in the database
   const sameVideos = await History.find({url: videoUrl});
@@ -54,14 +54,16 @@ app.post("/addHistory", async (req, res) => {
     await video.save();
   } else {
     // if video is already in database, then update its date to now
-    const video = sameVideos[0];
-    video.date = Date.now();
-    await video.save();
+    await History.updateOne(
+      { url: videoUrl }, 
+      { date: Date.now() },
+      (err, res) => console.log(err)
+    );
   }
 });
 
 
-app.post("/addBookmark", async (req, res) => {
+app.post("/bookmark", async (req, res) => {
   const videoUrl = req.body.url;
   // check if bookmark already registered
   const sameBookmarks = await Bookmark.find({url: videoUrl});
@@ -71,4 +73,13 @@ app.post("/addBookmark", async (req, res) => {
     })
     await video.save();
   }
+})
+
+
+app.delete("/bookmark", async (req, res) => {
+  const videoUrl = req.body.url;
+  await Bookmark.deleteOne(
+    { url: videoUrl },
+    (err) => console.log(err)
+  );
 })
