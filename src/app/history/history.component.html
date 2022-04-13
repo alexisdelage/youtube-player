@@ -1,3 +1,12 @@
-<div class="column">
-  <p>history works!</p>
-</div>
+<h1>History</h1>
+
+<ul>
+  <li *ngFor="let video of videoHistory">
+    <a [href]="video.internUrl" mat-button class="video-item">
+      <div class="video-item">
+        <img [src]="video.pictureUrl" alt="" />
+        <span>{{ video.originalUrl }}</span>
+    </div>
+    </a>
+  </li>
+</ul>

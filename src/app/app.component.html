@@ -1,6 +1,6 @@
 <mat-toolbar color="primary">
   <mat-icon class="logo" aria-label="Youtube Player Logo">play_circle_outline</mat-icon>
-  <span>YoutubePlayer</span>
+  <a href="/" class="brand">YoutubePlayer</a>
 
   <span class="example-spacer"></span>
 
@@ -20,7 +20,7 @@
 <mat-drawer-container class="container" autosize>
 
   <mat-drawer-content>
-    <app-video-view></app-video-view>
+    <router-outlet></router-outlet>
   </mat-drawer-content>
 
   <mat-drawer #drawer class="sidenav" mode="side" [opened]=showPanel position="end">

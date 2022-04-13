@@ -2,6 +2,8 @@ import { Component, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 
+import { getVideoIdFromUrl } from '../utils';
+
 @Component({
   selector: 'app-video-view',
   templateUrl: './video-view.component.html',
@@ -10,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class VideoViewComponent implements OnInit {
 
   private baseUrl: string = "https://www.youtube-nocookie.com/embed/";
-  private videoSlug: string | null = null;
+  private videoID: string | null = null;
   public safeVideoUrl: SafeUrl | null = null;
 
   constructor(
@@ -25,14 +27,14 @@ export class VideoViewComponent implements OnInit {
     });
   }
 
-  setVideoSlug(videoSlug: string | null) : void {
-    this.videoSlug = videoSlug;
-    if (videoSlug === null) {
+  setVideoID(videoID: string | null) : void {
+    this.videoID = videoID;
+    if (videoID === null) {
       this.safeVideoUrl = null;
       return;
     }
     this.safeVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.baseUrl + this.videoSlug
+      this.baseUrl + this.videoID
     );
   }
 
@@ -41,21 +43,8 @@ export class VideoViewComponent implements OnInit {
    * @param videoUrl  The url of the video
    */
   updateVideo(videoUrl: string) : void {
-    // first, get the domain of the url
-    const url = new URL(videoUrl);
-    const domainArray = url.hostname.split('.'); // we split the url hostname
-    const domain = domainArray[domainArray.length - 2]; // get "youtube"
-    // then we get the video slug
-    let videoSlug = null;
-    if (domain === "youtube") {
-      // if we have youtube classic urls
-      const urlParams = new URLSearchParams(url.search);
-      videoSlug=urlParams.get('v');
-    } else if (domain === "youtu") {
-      // if we have youtube share urls
-      videoSlug = url.pathname;
-    }
-    this.setVideoSlug(videoSlug);
+    const videoID = getVideoIdFromUrl(videoUrl);
+    this.setVideoID(videoID);
   }
 
 }

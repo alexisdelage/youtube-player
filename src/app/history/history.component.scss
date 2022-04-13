@@ -1,0 +1,39 @@
+h1 {
+  margin: 1rem 16px;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    a {
+      border-radius: 0;
+    }
+
+    .video-item {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+
+      img {
+        height: 3rem;
+        display: block;
+        margin: 5px;
+      }
+
+      span {
+        white-space: normal;
+        display: flex;
+        text-align: left;
+        line-height: normal;
+        margin: 8px;
+        align-items: center;
+      }
+    }
+  }
+}
