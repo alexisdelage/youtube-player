@@ -1,15 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body {
+html, body, app-rout {
   height: 100%;
 }
 
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-}
-
-.column {
-  width: 20rem;
-  max-width: 20%;
 }

@@ -1,6 +1,14 @@
 .search-form {
   font-size: 1rem;
-  width: 20rem;
+  width: 25rem;
+
+  .search-field {
+    width: 20rem;
+
+    .search-input::placeholder {
+      color: white;
+    }
+  }
 }
 
 .search-icon {

@@ -20,10 +20,10 @@
 <mat-drawer-container class="container" autosize>
 
   <mat-drawer-content>
-    <router-outlet></router-outlet>
+    <app-video-view></app-video-view>
   </mat-drawer-content>
 
-  <mat-drawer #bookmarksDrawer class="example-sidenav" mode="side" [opened]=showPanel position="end">
+  <mat-drawer #drawer class="sidenav" mode="side" [opened]=showPanel position="end">
     <app-history *ngIf="showHistory"></app-history>
     <app-bookmarks *ngIf="showBookmarks" ></app-bookmarks>
   </mat-drawer>

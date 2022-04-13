@@ -1,6 +1,6 @@
 import { Component, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-video-view',
@@ -13,11 +13,16 @@ export class VideoViewComponent implements OnInit {
   private videoSlug: string | null = null;
   public safeVideoUrl: SafeUrl | null = null;
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private route: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.updateVideo("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+    this.route.queryParams.subscribe(params => {
+      const searchURL = params['search'];
+      if (searchURL) this.updateVideo(searchURL);
+    });
   }
 
   setVideoSlug(videoSlug: string | null) : void {
@@ -41,19 +46,16 @@ export class VideoViewComponent implements OnInit {
     const domainArray = url.hostname.split('.'); // we split the url hostname
     const domain = domainArray[domainArray.length - 2]; // get "youtube"
     // then we get the video slug
+    let videoSlug = null;
     if (domain === "youtube") {
       // if we have youtube classic urls
       const urlParams = new URLSearchParams(url.search);
-      const videoSlug = urlParams.get('v');
-      this.setVideoSlug(videoSlug);
+      videoSlug=urlParams.get('v');
     } else if (domain === "youtu") {
       // if we have youtube share urls
-      const videoSlug = url.pathname;
-      this.setVideoSlug(videoSlug);
-    } else {
-      // if it is not from youtube
-      this.setVideoSlug(null);
+      videoSlug = url.pathname;
     }
+    this.setVideoSlug(videoSlug);
   }
 
 }

@@ -3,10 +3,10 @@
   <mat-icon matSuffix>search</mat-icon>
 </mat-form-field> -->
 
-<form class="search-form">
-  <mat-form-field floatLabel="never" appearance="standard">
+<form class="search-form" method="GET">
+  <mat-form-field class="search-field" floatLabel="never" appearance="standard">
     <span matPrefix></span>
-    <input type="search" matInput placeholder="Search" name="search"> <!-- [(ngModel)]= "search">-->
+    <input type="search" class="search-input" matInput placeholder="Type an URL" name="search"> <!-- [(ngModel)]= "search">-->
     <button class="search-icon" matSuffix mat-icon-button><mat-icon>search</mat-icon></button>
   </mat-form-field>
   <br>

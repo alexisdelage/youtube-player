@@ -41,34 +41,4 @@ export class AppComponent {
     }, time)
   }
 
-  /*
-  toggleHistory(): boolean {
-    if (this.showHistory) {
-      this.showPanel = false;
-      setTimeout(()=>this.showHistory=false, 300);
-    } else {
-      this.showHistory = true;
-      this.showBookmarks = false;
-      setTimeout(
-        () => this.showPanel = true,
-        300
-      )
-    }
-
-    return true;
-  }
-
-  toggleBookmarks(): void {
-    if (this.showBookmarks && this.showPanel) {
-      this.showPanel = false;
-    } else {
-      this.showHistory = false;
-      this.showBookmarks = true;
-      setTimeout(
-        () => this.showPanel = true,
-        300
-      )
-    }
-  }
-  */
 }
