@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
 @Component({
   selector: 'app-video-view',

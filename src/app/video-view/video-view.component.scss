@@ -1,0 +1,26 @@
+.video-frame {
+  margin: 2rem;
+  height: 100%;
+
+  .video-ratio {
+    aspect-ratio: 16/9;
+    max-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+
+    .video {
+      aspect-ratio: auto 16/9;
+      height: 100%;
+    }
+    
+    button {
+      margin-top: 1rem;
+      margin-left: auto;
+      width: max-content;
+    }
+
+  }
+
+}
+

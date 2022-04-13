@@ -1,11 +1,12 @@
-<iframe
-  width="560"
-  height="315"
-  [src]="safeVideoUrl"
-  title="YouTube video player"
-  frameborder="0"
-  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen>
-</iframe>
-
-<!-- https://angular.io/guide/security#trusting-safe-values -->
+<div class="video-frame">
+  <div class="video-ratio">
+  <iframe class="video"
+    [src]="safeVideoUrl"
+    title="YouTube video player"
+    frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen>
+  </iframe>
+  <button mat-raised-button color="accent">Add to bookmarks <mat-icon>bookmark_add</mat-icon></button>
+</div>
+</div>

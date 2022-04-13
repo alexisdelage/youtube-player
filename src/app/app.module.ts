@@ -36,6 +36,6 @@ import { BookmarksComponent } from './bookmarks/bookmarks.component';
     MatSidenavModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
