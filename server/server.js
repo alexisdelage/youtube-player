@@ -26,22 +26,31 @@ app.use((req, res, next) => {
 });
 app.listen(8000, () => console.log("Server started!"));
 
-
-app.get("/history", async (req, res) => {
+/**
+ * GET history
+ * Returns the list of all History objects
+ */
+app.get("/api/history", async (req, res) => {
     const historyList = await History.find().sort({ date: -1 });
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(historyList));
 });
 
-
-app.get("/bookmark", async (req, res) => {
+/**
+ * GET bookamrks
+ * Returns the list of all bookmarks
+ */
+app.get("/api/bookmark", async (req, res) => {
   const bookmarksList = await Bookmark.find();
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(bookmarksList));
 });
 
-
-app.post("/history", async (req, res) => {
+/**
+ * POST history
+ * From a url given in POST details, save it as a History object in database
+ */
+app.post("/api/history", async (req, res) => {
   const videoUrl = req.body.url;
   // we check if there is already the video in the database
   const sameVideos = await History.find({url: videoUrl});
@@ -55,15 +64,18 @@ app.post("/history", async (req, res) => {
   } else {
     // if video is already in database, then update its date to now
     await History.updateOne(
-      { url: videoUrl }, 
+      { url: videoUrl },
       { date: Date.now() },
       (err, res) => console.log(err)
     );
   }
 });
 
-
-app.post("/bookmark", async (req, res) => {
+/**
+ * POST bookmark
+ * From a url given in POST details, save it as a Bookmark object in database
+ */
+app.post("/api/bookmark", async (req, res) => {
   const videoUrl = req.body.url;
   // check if bookmark already registered
   const sameBookmarks = await Bookmark.find({url: videoUrl});
@@ -75,8 +87,11 @@ app.post("/bookmark", async (req, res) => {
   }
 })
 
-
-app.delete("/bookmark", async (req, res) => {
+/**
+ * DELETE bookmarks
+ * From a url given in POST details, delete the corresponding object in database
+ */
+app.delete("/api/bookmark", async (req, res) => {
   const videoUrl = req.body.url;
   await Bookmark.deleteOne(
     { url: videoUrl },
