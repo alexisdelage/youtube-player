@@ -1,6 +1,6 @@
 <div class="video-component">
 
-  <div *ngIf="safeVideoUrl" class="video-ratio">
+  <div *ngIf="safeVideoUrl != undefined" class="video-ratio">
     <iframe class="video"
       [src]="safeVideoUrl"
       title="YouTube video player"
@@ -11,7 +11,7 @@
     <button mat-raised-button color="accent">Add to bookmarks <mat-icon>bookmark_add</mat-icon></button>
   </div>
 
-  <div *ngIf="!safeVideoUrl" class="video-ratio">
+  <div *ngIf="safeVideoUrl == undefined" class="video-ratio">
     <div class="video">
       <h1>No content</h1>
       <p>
