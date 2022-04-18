@@ -2,10 +2,12 @@
 
 <ul>
   <li *ngFor="let video of videoBookmarks">
-    <a [href]="video.appUrl" mat-button class="video-item">
+    <a [href]="video.appUrl" mat-button>
       <div class="video-item">
         <img [src]="video.pictureUrl" alt="" />
-        <span>{{ video.url }}</span>
+        <div class="text">
+          <span>{{ video.url }}</span>
+        </div>
     </div>
     </a>
   </li>

@@ -2,10 +2,13 @@
 
 <ul>
   <li *ngFor="let video of videoHistory">
-    <a [href]="video.appUrl" mat-button class="video-item">
+    <a [href]="video.appUrl" mat-button>
       <div class="video-item">
         <img [src]="video.pictureUrl" alt="" />
-        <span>{{ video.url }}</span>
+        <div class="text">
+          <span class="title">{{ video.url }}</span>
+          <span class="date">{{ video.date | date:'medium' }}</span>
+        </div>
     </div>
     </a>
   </li>

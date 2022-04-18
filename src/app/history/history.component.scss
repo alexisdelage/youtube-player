@@ -13,27 +13,36 @@ ul {
 
     a {
       border-radius: 0;
-    }
 
-    .video-item {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-
-      img {
-        height: 3rem;
-        display: block;
-        margin: 8px 5px;
-      }
-
-      span {
-        white-space: normal;
-        overflow-wrap: anywhere;
+      div.video-item {
         display: flex;
-        text-align: left;
-        line-height: normal;
-        margin: 8px;
+        flex-direction: row;
+        flex-wrap: nowrap;
         align-items: center;
+
+        img {
+          height: 3rem;
+          display: block;
+          margin: 8px 5px;
+        }
+
+        div.text {
+          margin: 8px;
+
+          span {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            text-align: left;
+            line-height: normal;
+            display: flex;
+
+            &.date {
+              margin-top: 0.1rem;
+              font-size: 0.7rem;
+              color: grey;
+            }
+          }
+        }
       }
     }
   }
