@@ -7,13 +7,13 @@
 
 <ul>
   <li *ngFor="let video of videoBookmarks">
-    <a [href]="video.appUrl" mat-button>
+    <a routerLink="/" [queryParams]="{search: video.url}" mat-button>
       <div class="video-item">
         <img [src]="video.pictureUrl" alt="" />
         <div class="text">
           <span>{{ video.url }}</span>
         </div>
-    </div>
+      </div>
     </a>
   </li>
 </ul>

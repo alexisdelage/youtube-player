@@ -4,7 +4,6 @@ export default class Video implements VideoModel {
   private _url: string;
   private _date?: Date;
   private _id?: string | null;
-  private _appUrl?: string;
   private _pictureUrl?: string;
 
   constructor(url: string, date?: Date, id?: string, appUrl?: string,
@@ -12,7 +11,6 @@ export default class Video implements VideoModel {
     this._url = url;
     this._date = date;
     this._id = id;
-    this._appUrl = appUrl;
     this._pictureUrl = pictureUrl;
     this.build();
   }
@@ -26,9 +24,6 @@ export default class Video implements VideoModel {
   public get id() {
     return this._id;
   }
-  public get appUrl() {
-    return this._appUrl;
-  }
   public get pictureUrl() {
     return this._pictureUrl;
   }
@@ -39,7 +34,6 @@ export default class Video implements VideoModel {
   public build(): Video {
     this.setId();
     this.setDate();
-    this.setAppUrl();
     this.setPictureUrl();
     return this;
   }
@@ -76,17 +70,6 @@ export default class Video implements VideoModel {
   setDate(): void {
     if (this._date) return;
     this._date = new Date();
-  }
-
-
-  /**
-   * Set the video app url
-   */
-  setAppUrl(): void {
-    // check if not already added
-    if (this._appUrl) return;
-    // else try to get it
-    this._appUrl = `/?search=${this.url}`;
   }
 
 

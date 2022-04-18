@@ -7,14 +7,14 @@
 
 <ul>
   <li *ngFor="let video of videoHistory">
-    <a [href]="video.appUrl" mat-button>
+    <a routerLink="/" [queryParams]="{search: video.url}" mat-button>
       <div class="video-item">
         <img [src]="video.pictureUrl" alt="" />
         <div class="text">
           <span>{{ video.url }}</span>
           <span class="date">{{ video.date | date:'medium' }}</span>
         </div>
-    </div>
+      </div>
     </a>
   </li>
 </ul>
