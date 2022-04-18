@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs';
 
+import VideoModel from './interfaces';
 import Video from './video';
 
 @Injectable({
@@ -17,8 +18,10 @@ export class BookmarkService {
   constructor(private http: HttpClient) { }
 
   getBookmarkList(): Observable<Video[]> {
-    return this.http.get<Video[]>(this.bookmarkUrl).pipe(
-      tap(_ => console.log("get bookmark list")),
+    return this.http.get<VideoModel[]>(this.bookmarkUrl).pipe(
+      map(videoModelList => videoModelList.map(
+        videoModel => new Video(videoModel.url)
+      )),
       catchError((err) => {console.log(err); return of([])})
     )
   }
@@ -30,8 +33,8 @@ export class BookmarkService {
     const otherHttpOptions = {
       headers: this.headers
     }
-    return this.http.post<Video>(this.bookmarkUrl, body, otherHttpOptions).pipe(
-      tap(_ => console.log("add video in bookmarks")),
+    return this.http.post<VideoModel>(this.bookmarkUrl, body, otherHttpOptions).pipe(
+      map(videoModel => new Video(videoModel.url)),
       catchError((err) => {console.log(err); return of(new Video(""))})
     )
   }
@@ -43,8 +46,8 @@ export class BookmarkService {
         url: video.url
       }
     }
-    return this.http.delete<Video>(this.bookmarkUrl, httpOptions).pipe(
-      tap(_ => console.log("add video in history")),
+    return this.http.delete<VideoModel>(this.bookmarkUrl, httpOptions).pipe(
+      map(videoModel => new Video(videoModel.url)),
       catchError((err) => {console.log(err); return of(new Video(""))})
     )
   }

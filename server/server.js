@@ -64,7 +64,6 @@ app.post("/api/history", async (req, res) => {
     await video.save();
   } else {
     // if video is already in database, then update its date to now
-    console.log(videoUrl, now);
     await History.updateOne(
       { url: videoUrl },
       { date: now },

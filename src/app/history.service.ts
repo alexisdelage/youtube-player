@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs';
 
 import Video from './video';
+import VideoModel from './interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,10 @@ export class HistoryService {
   constructor(private http: HttpClient) { }
 
   getHistoryList(): Observable<Video[]> {
-    return this.http.get<Video[]>(this.historyUrl).pipe(
-      tap(_ => console.log("get history list")),
+    return this.http.get<VideoModel[]>(this.historyUrl).pipe(
+      map(videoModelList => videoModelList.map(
+        videoModel => new Video(videoModel.url, videoModel.date)
+      )),
       catchError((err) => {console.log(err); return of([])})
     )
   }
@@ -29,8 +32,8 @@ export class HistoryService {
     const body = {
       url: video.url
     }
-    return this.http.post<Video>(this.historyUrl, body, this.httpOptions).pipe(
-      tap(_ => console.log("add video in history")),
+    return this.http.post<VideoModel>(this.historyUrl, body, this.httpOptions).pipe(
+      map(videoModel => new Video(videoModel.url, videoModel.date)),
       catchError((err) => {console.log(err); return of(new Video(""))})
     )
   }
