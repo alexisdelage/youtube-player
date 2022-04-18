@@ -1,4 +1,9 @@
-<h1>History</h1>
+<div class="title">
+  <h1>History</h1>
+  <button mat-icon-button aria-label="Refresh" (click)="getHistoryList()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
 
 <ul>
   <li *ngFor="let video of videoHistory">
@@ -6,7 +11,7 @@
       <div class="video-item">
         <img [src]="video.pictureUrl" alt="" />
         <div class="text">
-          <span class="title">{{ video.url }}</span>
+          <span>{{ video.url }}</span>
           <span class="date">{{ video.date | date:'medium' }}</span>
         </div>
     </div>

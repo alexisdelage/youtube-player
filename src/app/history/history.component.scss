@@ -1,5 +1,16 @@
-h1 {
+div.title {
+  display: flex;
   margin: 1rem 21px;
+  align-items: center;
+
+  h1 {
+    margin: 0;
+    margin-right: 1rem;
+  }
+
+  button:active mat-icon {
+    animation: 0.6s rotatefresh 0.5;
+  }
 }
 
 ul {
@@ -45,5 +56,18 @@ ul {
         }
       }
     }
+  }
+}
+
+
+@keyframes rotatefresh {
+  from {
+      transform: rotate(0deg);
+  }
+
+  to {
+      transform: rotate(360deg);
+      transition-duration: 0.6s;
+      transition: 0.6s;
   }
 }

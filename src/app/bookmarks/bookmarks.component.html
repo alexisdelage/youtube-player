@@ -1,4 +1,9 @@
-<h1>Bookmarks</h1>
+<div class="title">
+  <h1>Bookmarks</h1>
+  <button mat-icon-button aria-label="Refresh" (click)="getBookmarkList()">
+    <mat-icon>refresh</mat-icon>
+  </button>
+</div>
 
 <ul>
   <li *ngFor="let video of videoBookmarks">
