@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { getVideoIdFromUrl, getPictureLink } from '../utils';
-import { TemplateVideo } from '../interfaces';
+
+import { HistoryService } from '../history.service';
+import Video from '../video';
 
 @Component({
   selector: 'app-history',
@@ -9,46 +10,18 @@ import { TemplateVideo } from '../interfaces';
 })
 export class HistoryComponent implements OnInit {
 
-  public videoHistory: TemplateVideo[] = [];
+  public videoHistory: Video[] = [];
 
-  constructor() { }
+  constructor(private historyService: HistoryService) { }
 
   ngOnInit(): void {
-    const historyUrls = [
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA",
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA"
-    ]
-    this.videoHistory = historyUrls.map((url) => {
-      const videoID = getVideoIdFromUrl(url);
-      return {
-        id: videoID,
-        originalUrl: url,
-        internUrl: `/?search=${url}`,
-        pictureUrl: getPictureLink(videoID)
-      } as TemplateVideo
-    });
+    this.getHistoryList();
+  }
+
+  getHistoryList(): void {
+    this.historyService.getHistoryList().subscribe(
+      historyList => this.videoHistory = historyList
+    )
   }
 
 }

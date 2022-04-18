@@ -23,29 +23,29 @@ export class BookmarkService {
     )
   }
 
-  addBookmark(video: Video): void {
+  addBookmark(video: Video): Observable<Video> {
     const body = {
-      url: video.getUrl()
+      url: video.url
     }
     const otherHttpOptions = {
       headers: this.headers
     }
-    this.http.post(this.bookmarkUrl, body, otherHttpOptions).pipe(
+    return this.http.post<Video>(this.bookmarkUrl, body, otherHttpOptions).pipe(
       tap(_ => console.log("add video in bookmarks")),
-      catchError((err) => {console.log(err); return of(null)})
+      catchError((err) => {console.log(err); return of(new Video(""))})
     )
   }
 
-  deleteBookmark(video: Video): void {
+  deleteBookmark(video: Video): Observable<Video> {
     const httpOptions = {
       headers: this.headers,
       body: {
-        url: video.getUrl()
+        url: video.url
       }
     }
-    this.http.delete(this.bookmarkUrl, httpOptions).pipe(
+    return this.http.delete<Video>(this.bookmarkUrl, httpOptions).pipe(
       tap(_ => console.log("add video in history")),
-      catchError((err) => {console.log(err); return of(null)})
+      catchError((err) => {console.log(err); return of(new Video(""))})
     )
   }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { getVideoIdFromUrl, getPictureLink } from '../utils';
-import Video from '../interfaces';
+
+import { BookmarkService } from '../bookmark.service';
+import Video from '../video';
 
 @Component({
   selector: 'app-bookmarks',
@@ -11,22 +12,16 @@ export class BookmarksComponent implements OnInit {
 
   public videoBookmarks: Video[] = [];
 
-  constructor() { }
+  constructor(private bookmarkService: BookmarkService) { }
 
   ngOnInit(): void {
-    const bookmarksUrls = [
-      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "https://www.youtube.com/watch?v=Kt-tLuszKBA"
-    ]
-    this.videoBookmarks = bookmarksUrls.map((url) => {
-      const videoID = getVideoIdFromUrl(url);
-      return {
-        id: videoID,
-        originalUrl: url,
-        internUrl: `/?search=${url}`,
-        pictureUrl: getPictureLink(videoID)
-      } as Video
-    });
+    this.getBookmarkList();
+  }
+
+  getBookmarkList(): void {
+    this.bookmarkService.getBookmarkList().subscribe(
+      bookmarkList => this.videoBookmarks = bookmarkList
+    )
   }
 
 }

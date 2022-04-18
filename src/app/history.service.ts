@@ -25,13 +25,13 @@ export class HistoryService {
     )
   }
 
-  addHistory(video: Video): void {
+  addHistory(video: Video): Observable<Video> {
     const body = {
-      url: video.getUrl()
+      url: video.url
     }
-    this.http.post(this.historyUrl, body, this.httpOptions).pipe(
+    return this.http.post<Video>(this.historyUrl, body, this.httpOptions).pipe(
       tap(_ => console.log("add video in history")),
-      catchError((err) => {console.log(err); return of(null)})
+      catchError((err) => {console.log(err); return of(new Video(""))})
     )
   }
 

@@ -1,72 +1,74 @@
+import { findIndex } from "rxjs";
 
 export default class Video {
-  private url: string;
-  private date?: Date;
-  private id?: string;
-  private appUrl?: string;
-  private pictureUrl?: string;
+  private _url: string;
+  private _date?: Date;
+  private _id?: string | null;
+  private _appUrl?: string;
+  private _pictureUrl?: string;
 
   constructor(url: string, date?: Date, id?: string, appUrl?: string,
       pictureUrl?: string) {
-    this.url = url;
-    this.date = date || this.setDate();
-    this.id = id || this.setId();
-    this.appUrl = appUrl || this.setAppUrl();
-    this.pictureUrl = pictureUrl || this.setPictureUrl();
+    this._url = url;
+    this._date = date || this.setDate();
+    this._id = id || this.setId();
+    this._appUrl = appUrl || this.setAppUrl();
+    this._pictureUrl = pictureUrl || this.setPictureUrl();
   }
 
-  getUrl() {
-    return this.url;
+  public get url() {
+    return this._url;
   }
-  getDate() {
-    return this.date;
+  public get date() {
+    return this._date;
   }
-  getId() {
-    return this.id;
+  public get id() {
+    return this._id;
   }
-  getAppUrl() {
-    return this.appUrl;
+  public get appUrl() {
+    return this._appUrl;
   }
-  getPictureUrl() {
-    return this.pictureUrl;
+  public get pictureUrl() {
+    return this._pictureUrl;
   }
 
   /**
    * Set the video id to a video object
    */
-  setId() : string {
+  setId() : string | null {
     // check if not already added
-    if (this.id) return this.id;
-    // else try to get it
-    const url = new URL(this.url);
-    const domainArray = url.hostname.split('.'); // we split the url hostname
-    const domain = domainArray[domainArray.length - 2]; // get "youtube"
-    // then we get the video id
-    if (domain === "youtube") {
-      // if we have youtube classic urls
-      const urlParams = new URLSearchParams(url.search);
-      const id = urlParams.get('v');
-      if (id !== null) {
-        this.id = id;
-        return this.id;
+    if (this._id) return this._id;
+    // else try to get the id
+    this._id = null;
+    try {
+      const url = new URL(this.url);
+      const domainArray = url.hostname.split('.'); // we split the url hostname
+      const domain = domainArray[domainArray.length - 2]; // get "youtube"
+      // then we get the video id
+      if (domain === "youtube") {
+        // if we have youtube classic urls
+        const urlParams = new URLSearchParams(url.search);
+        const id = urlParams.get('v');
+        if (id !== null) {
+          this._id = id;
+        }
       }
+      if (domain === "youtu") {
+        // if we have youtube share urls
+        this._id = url.pathname;
+      }
+    } finally {
+      return this._id;
     }
-    if (domain === "youtu") {
-      // if we have youtube share urls
-      this.id = url.pathname;
-      return this.id;
-    }
-    // if we cannot get the id, throw an error
-    throw "Invalid Url";
   }
 
   /**
    * Set a video date to the object if not defined
    */
   setDate() : Date {
-    if (this.date) return this.date;
-    this.date = new Date();
-    return this.date;
+    if (this._date) return this._date;
+    this._date = new Date();
+    return this._date;
   }
 
 
@@ -75,10 +77,10 @@ export default class Video {
    */
   setAppUrl() : string {
     // check if not already added
-    if (this.appUrl) return this.appUrl;
+    if (this._appUrl) return this._appUrl;
     // else try to get it
-    this.appUrl = `/search=${this.url}`;
-    return this.appUrl;
+    this._appUrl = `/search=${this.url}`;
+    return this._appUrl;
   }
 
 
@@ -87,15 +89,15 @@ export default class Video {
    */
   setPictureUrl(): string {
     // check if not already added
-    if (this.pictureUrl) return this.pictureUrl;
-    // else try to get it
-    try {
-      this.setId();
-      this.pictureUrl = `https://i.ytimg.com/vi_webp/${this.id}/maxresdefault.webp`;
-    } catch (e) {
-      this.pictureUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/800px-A_black_image.jpg";
+    if (this._pictureUrl) return this._pictureUrl;
+    // else make the picture url
+    this.setId();
+    if (this._id !== null) {
+      this._pictureUrl = `https://i.ytimg.com/vi_webp/${this.id}/maxresdefault.webp`;
+    } else {
+      this._pictureUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/800px-A_black_image.jpg";
     }
-    return this.pictureUrl;
+    return this._pictureUrl;
   }
 
 

@@ -52,23 +52,27 @@ app.get("/api/bookmark", async (req, res) => {
  */
 app.post("/api/history", async (req, res) => {
   const videoUrl = req.body.url;
+  const now = Date.now();
   // we check if there is already the video in the database
   const sameVideos = await History.find({url: videoUrl});
   if (sameVideos.length == 0) {
     // if video is not in database, then add it
     const video = new History({
       url: videoUrl,
-      date: Date.now()
+      date: now
     });
     await video.save();
   } else {
     // if video is already in database, then update its date to now
+    console.log(videoUrl, now);
     await History.updateOne(
       { url: videoUrl },
-      { date: Date.now() },
-      (err, res) => console.log(err)
-    );
+      { date: now },
+      (err, res) => {if (err) console.log(err)}
+    ).clone();
   }
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({url: videoUrl, date: now}));
 });
 
 /**
@@ -85,6 +89,8 @@ app.post("/api/bookmark", async (req, res) => {
     })
     await video.save();
   }
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({url: videoUrl}));
 })
 
 /**
@@ -97,4 +103,6 @@ app.delete("/api/bookmark", async (req, res) => {
     { url: videoUrl },
     (err) => console.log(err)
   );
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify({url: videoUrl}));
 })
