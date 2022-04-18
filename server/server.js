@@ -37,7 +37,7 @@ app.get("/api/history", async (req, res) => {
 });
 
 /**
- * GET bookamrks
+ * GET bookmarks
  * Returns the list of all bookmarks
  */
 app.get("/api/bookmark", async (req, res) => {
@@ -45,6 +45,19 @@ app.get("/api/bookmark", async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(bookmarksList));
 });
+
+
+/**
+ * GET a boolean which indicates if an url is already registered
+ * as a bookmark or not
+ */
+app.get("/api/bookmark/check", async (req, res) => {
+  const bookmarks = await Bookmark.find({url: req.query.url});
+  const bookmarkExists = bookmarks.length == 0 ? false : true;
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(bookmarkExists));
+});
+
 
 /**
  * POST history
@@ -100,8 +113,10 @@ app.delete("/api/bookmark", async (req, res) => {
   const videoUrl = req.body.url;
   await Bookmark.deleteOne(
     { url: videoUrl },
-    (err) => console.log(err)
-  );
+    (err) => {if (err) console.log(err)}
+  ).clone();
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify({url: videoUrl}));
 })
+
+

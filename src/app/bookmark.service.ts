@@ -26,6 +26,14 @@ export class BookmarkService {
     )
   }
 
+  getBookmarkCheck(video: Video): Observable<boolean> {
+    const url = this.bookmarkUrl + "/check?url=" + video.url;
+    return this.http.get<boolean>(url).pipe(
+      tap(_ => {}),
+      catchError((err) => {console.log(err); return of(false)})
+    )
+  }
+
   addBookmark(video: Video): Observable<Video> {
     const body = {
       url: video.url
