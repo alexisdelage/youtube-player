@@ -31,39 +31,39 @@ export class BookmarkService {
   }
 
 
-  addBookmark(video: Video): void {
+  addBookmark(video: Video): boolean {
     const body = {
       url: video.url
     }
     const otherHttpOptions = {
       headers: this.headers
     }
+    let success = false;
     this.http.post<boolean>(this.bookmarkUrl, body, otherHttpOptions).pipe(
       catchError(() => of(false)),
       tap(success => { if(success) this.loadBookmarkList() })
-    ).subscribe();
+    ).subscribe(
+      res => success = res
+    );
+    return success;
   }
 
 
-  deleteBookmark(video: Video): void {
+  deleteBookmark(video: Video): boolean {
     const httpOptions = {
       headers: this.headers,
       body: {
         url: video.url
       }
     }
+    let success = false;
     this.http.delete<boolean>(this.bookmarkUrl, httpOptions).pipe(
       catchError(() => of(false)),
       tap(success => { if(success) this.loadBookmarkList() })
-    ).subscribe();
-  }
-
-
-  checkIfBookmarked(video: Video): Observable<boolean | null> {
-    const url = this.bookmarkUrl + "/check?url=" + video.url;
-    return this.http.get<boolean>(url).pipe(
-      catchError(err => of(null))
-    )
+    ).subscribe(
+      res => success = res
+    );
+    return success;
   }
 
 

@@ -32,14 +32,18 @@ export class HistoryService {
   }
 
 
-  addHistory(video: Video): void {
+  addHistory(video: Video): boolean {
     const body = {
       url: video.url
     }
+    let success = false;
     this.http.post<boolean>(this.historyUrl, body, this.httpOptions).pipe(
       catchError(() => of(false)),
       tap(success => { if(success) this.loadHistoryList() })
-    ).subscribe();
+    ).subscribe(
+      res => success = res
+    );
+    return success;
   }
 
 

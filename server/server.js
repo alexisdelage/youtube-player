@@ -48,11 +48,12 @@ app.get("/api/bookmark", async (req, res) => {
 
 
 /**
- * GET a boolean which indicates if an url is already registered
+ * Return a boolean which indicates if an url is already registered
  * as a bookmark or not
  */
-app.get("/api/bookmark/check", async (req, res) => {
-  const bookmarks = await Bookmark.find({url: req.query.url});
+app.post("/api/bookmark/check", async (req, res) => {
+  const videoUrl = req.body.url;
+  const bookmarks = await Bookmark.find({url: videoUrl});
   const bookmarkExists = bookmarks.length == 0 ? false : true;
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(bookmarkExists));
@@ -91,6 +92,7 @@ app.post("/api/history", async (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(JSON.stringify(success));
 });
+
 
 /**
  * POST bookmark

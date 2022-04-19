@@ -8,15 +8,13 @@
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowfullscreen>
     </iframe>
-    <button *ngIf="isBookmarked === null" mat-raised-button color="accent" disabled>
+    <button *ngIf="!isBookmarked" mat-raised-button color="accent"
+      (click)="addToBookmarks()">
       Add to bookmarks
       <mat-icon>bookmark_add</mat-icon>
     </button>
-    <button *ngIf="!!!isBookmarked" mat-raised-button color="accent" (click)="addToBookmarks()">
-      Add to bookmarks
-      <mat-icon>bookmark_add</mat-icon>
-    </button>
-    <button *ngIf="isBookmarked" mat-raised-button color="accent" (click)="removeFromBookmarks()">
+    <button *ngIf="isBookmarked" mat-raised-button color="accent"
+      (click)="removeFromBookmarks()">
       Remove from bookmarks
       <mat-icon>bookmark_remove</mat-icon>
     </button>

@@ -6,7 +6,7 @@ import Video from '../video';
 @Component({
   selector: 'app-bookmarks',
   templateUrl: './bookmarks.component.html',
-  styleUrls: ['./bookmarks.component.scss']
+  styleUrls: ['../sidenav.scss']
 })
 export class BookmarksComponent implements OnInit {
 
@@ -19,6 +19,12 @@ export class BookmarksComponent implements OnInit {
       bookmarkList => this.videoBookmarks = bookmarkList
     );
     this.bookmarkService.loadBookmarkList();
+  }
+
+  removeBookmark(event:Event, video: Video): boolean {
+    event.stopPropagation();
+    this.bookmarkService.deleteBookmark(video);
+    return false;
   }
 
 }

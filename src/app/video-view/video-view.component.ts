@@ -16,7 +16,7 @@ export class VideoViewComponent implements OnInit {
   private baseEmbedUrl: string = "https://www.youtube-nocookie.com/embed/";
   private video?: Video;
   public safeVideoUrl?: SafeUrl;
-  public isBookmarked: boolean | null = null;
+  public isBookmarked: boolean = false;
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -45,8 +45,8 @@ export class VideoViewComponent implements OnInit {
         // add the video in history
         this.historyService.addHistory(this.video);
         // know if the video is bookmarked
-        this.bookmarkService.checkIfBookmarked(this.video).subscribe(
-          res => this.isBookmarked = res
+        this.bookmarkService.bookmarkList.subscribe(
+          list => this.isBookmarked = list.some(v => v.url == this.video!.url)
         )
       } else {
         // if there is an error, do not show the video
@@ -56,13 +56,17 @@ export class VideoViewComponent implements OnInit {
   }
 
   addToBookmarks(): void {
-    this.bookmarkService.addBookmark(this.video!);
-    this.isBookmarked = true;
+    const success = this.bookmarkService.addBookmark(this.video!);
+    if (success) {
+      this.isBookmarked = true;
+    }
   }
 
   removeFromBookmarks(): void {
-    this.bookmarkService.deleteBookmark(this.video!);
-    this.isBookmarked = false;
+    const success = this.bookmarkService.deleteBookmark(this.video!);
+    if (success) {
+      this.isBookmarked = false;
+    }
   }
 
 

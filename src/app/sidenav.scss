@@ -8,9 +8,9 @@ div.title {
     margin-right: 1rem;
   }
 
-  button:active mat-icon {
-    animation: 0.6s rotatefresh 1;
-  }
+  // button:active mat-icon {
+  //   animation: 0.6s rotatefresh 1;
+  // }
 }
 
 ul {
@@ -62,14 +62,14 @@ ul {
 }
 
 
-@keyframes rotatefresh {
-  from {
-      transform: rotate(0deg);
-  }
+// @keyframes rotatefresh {
+//   from {
+//       transform: rotate(0deg);
+//   }
 
-  to {
-      transform: rotate(360deg);
-      // transition-duration: 0.6s;
-      // transition: 0.6s;
-  }
-}
+//   to {
+//       transform: rotate(360deg);
+//       // transition-duration: 0.6s;
+//       // transition: 0.6s;
+//   }
+// }

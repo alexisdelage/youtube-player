@@ -13,6 +13,9 @@
         <div class="text">
           <span>{{ video.url }}</span>
         </div>
+        <button mat-icon-button aria-label="Remove the bookmark" (click)="removeBookmark($event, video)">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
     </a>
   </li>
