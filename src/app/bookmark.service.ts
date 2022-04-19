@@ -23,13 +23,11 @@ export class BookmarkService {
 
   loadBookmarkList(): void {
     this.http.get<VideoModel[]>(this.bookmarkUrl).pipe(
-      map(videoModelList => videoModelList.map(
-        videoModel => new Video(videoModel.url)
-      )),
-      catchError((err) => {console.log(err); return of([])})
-    ).subscribe(
-      bookmarkList => this.bookmarkListSource.next(bookmarkList)
-    );
+      catchError(() => of(this.getInLocalStorage())),
+      tap(list => this.saveInLocalStorage(list)),
+      map(list => list.map(v => new Video(v.url))),
+      tap(list => this.bookmarkListSource.next(list))
+    ).subscribe();
   }
 
 
@@ -40,12 +38,10 @@ export class BookmarkService {
     const otherHttpOptions = {
       headers: this.headers
     }
-    this.http.post<VideoModel>(this.bookmarkUrl, body, otherHttpOptions).pipe(
-      map(videoModel => new Video(videoModel.url)),
-      catchError((err) => {console.log(err); return of(new Video(""))})
-    ).subscribe(
-      _ => this.loadBookmarkList()
-    );
+    this.http.post<boolean>(this.bookmarkUrl, body, otherHttpOptions).pipe(
+      catchError(() => of(false)),
+      tap(success => { if(success) this.loadBookmarkList() })
+    ).subscribe();
   }
 
 
@@ -56,21 +52,31 @@ export class BookmarkService {
         url: video.url
       }
     }
-    this.http.delete<VideoModel>(this.bookmarkUrl, httpOptions).pipe(
-      map(videoModel => new Video(videoModel.url)),
-      catchError((err) => {console.log(err); return of(new Video(""))})
-    ).subscribe(
-      _ =>  this.loadBookmarkList()
-    );
+    this.http.delete<boolean>(this.bookmarkUrl, httpOptions).pipe(
+      catchError(() => of(false)),
+      tap(success => { if(success) this.loadBookmarkList() })
+    ).subscribe();
   }
 
 
-  checkIfBookmarked(video: Video): Observable<boolean> {
+  checkIfBookmarked(video: Video): Observable<boolean | null> {
     const url = this.bookmarkUrl + "/check?url=" + video.url;
     return this.http.get<boolean>(url).pipe(
-      tap(_ => {}),
-      catchError((err) => {console.log(err); return of(false)})
+      catchError(err => of(null))
     )
+  }
+
+
+  getInLocalStorage(): VideoModel[] {
+    const jsonBookmarks = window.localStorage.getItem("bookmarks") || "[]";
+    const bookmarkList = JSON.parse(jsonBookmarks) as VideoModel[];
+    return bookmarkList;
+  }
+
+
+  saveInLocalStorage(list: VideoModel[]): void {
+    const jsonBookmarks = JSON.stringify(list);
+    window.localStorage.setItem("bookmarks", jsonBookmarks);
   }
 
 }

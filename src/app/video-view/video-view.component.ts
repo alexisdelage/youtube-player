@@ -16,7 +16,7 @@ export class VideoViewComponent implements OnInit {
   private baseEmbedUrl: string = "https://www.youtube-nocookie.com/embed/";
   private video?: Video;
   public safeVideoUrl?: SafeUrl;
-  public isBookmarked: boolean = false;
+  public isBookmarked: boolean | null = null;
 
   constructor(
     private sanitizer: DomSanitizer,

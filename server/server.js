@@ -66,6 +66,7 @@ app.get("/api/bookmark/check", async (req, res) => {
 app.post("/api/history", async (req, res) => {
   const videoUrl = req.body.url;
   const now = Date.now();
+  let success;
   // we check if there is already the video in the database
   const sameVideos = await History.find({url: videoUrl});
   if (sameVideos.length == 0) {
@@ -74,17 +75,21 @@ app.post("/api/history", async (req, res) => {
       url: videoUrl,
       date: now
     });
-    await video.save();
+    success = await video.save()
+      .then(() => true)
+      .catch(() => false);
   } else {
     // if video is already in database, then update its date to now
-    await History.updateOne(
+    success = await History.updateOne(
       { url: videoUrl },
       { date: now },
       (err, res) => {if (err) console.log(err)}
-    ).clone();
+    ).clone()
+      .then(() => true)
+      .catch(() => false);
   }
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({url: videoUrl, date: now}));
+  res.send(JSON.stringify(success));
 });
 
 /**
@@ -93,16 +98,19 @@ app.post("/api/history", async (req, res) => {
  */
 app.post("/api/bookmark", async (req, res) => {
   const videoUrl = req.body.url;
+  let success;
   // check if bookmark already registered
   const sameBookmarks = await Bookmark.find({url: videoUrl});
   if (sameBookmarks.length == 0) {
     const video = new Bookmark({
       url: videoUrl
     })
-    await video.save();
+    success = await video.save()
+      .then(() => true)
+      .catch(() => false);
   }
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({url: videoUrl}));
+  res.send(JSON.stringify(success));
 })
 
 /**
@@ -111,12 +119,14 @@ app.post("/api/bookmark", async (req, res) => {
  */
 app.delete("/api/bookmark", async (req, res) => {
   const videoUrl = req.body.url;
-  await Bookmark.deleteOne(
+  let success = await Bookmark.deleteOne(
     { url: videoUrl },
     (err) => {if (err) console.log(err)}
-  ).clone();
+  ).clone()
+    .then(() => true)
+    .catch(() => false);
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify({url: videoUrl}));
+  res.send(JSON.stringify(success));
 })
 
 
