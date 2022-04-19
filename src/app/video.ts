@@ -81,11 +81,7 @@ export default class Video implements VideoModel {
     if (this._pictureUrl) return;
     // else make the picture url
     this.setId();
-    if (this._id !== null) {
-      this._pictureUrl = `https://i.ytimg.com/vi_webp/${this.id}/maxresdefault.webp`;
-    } else {
-      this._pictureUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/A_black_image.jpg/800px-A_black_image.jpg";
-    }
+    this._pictureUrl = `https://i.ytimg.com/vi_webp/${this.id}/hqdefault.webp`;
   }
 
 

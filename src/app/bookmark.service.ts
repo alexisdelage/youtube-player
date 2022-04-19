@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, catchError, map, tap} from 'rxjs';
 
 import VideoModel from './interfaces';
 import Video from './video';
@@ -15,48 +14,62 @@ export class BookmarkService {
 
   private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
+  private bookmarkListSource = new BehaviorSubject<Video[]>([]);
+  public bookmarkList = this.bookmarkListSource.asObservable();
+
+
   constructor(private http: HttpClient) { }
 
-  getBookmarkList(): Observable<Video[]> {
-    return this.http.get<VideoModel[]>(this.bookmarkUrl).pipe(
+
+  loadBookmarkList(): void {
+    this.http.get<VideoModel[]>(this.bookmarkUrl).pipe(
       map(videoModelList => videoModelList.map(
         videoModel => new Video(videoModel.url)
       )),
       catchError((err) => {console.log(err); return of([])})
-    )
+    ).subscribe(
+      bookmarkList => this.bookmarkListSource.next(bookmarkList)
+    );
   }
 
-  getBookmarkCheck(video: Video): Observable<boolean> {
-    const url = this.bookmarkUrl + "/check?url=" + video.url;
-    return this.http.get<boolean>(url).pipe(
-      tap(_ => {}),
-      catchError((err) => {console.log(err); return of(false)})
-    )
-  }
 
-  addBookmark(video: Video): Observable<Video> {
+  addBookmark(video: Video): void {
     const body = {
       url: video.url
     }
     const otherHttpOptions = {
       headers: this.headers
     }
-    return this.http.post<VideoModel>(this.bookmarkUrl, body, otherHttpOptions).pipe(
+    this.http.post<VideoModel>(this.bookmarkUrl, body, otherHttpOptions).pipe(
       map(videoModel => new Video(videoModel.url)),
       catchError((err) => {console.log(err); return of(new Video(""))})
-    )
+    ).subscribe(
+      _ => this.loadBookmarkList()
+    );
   }
 
-  deleteBookmark(video: Video): Observable<Video> {
+
+  deleteBookmark(video: Video): void {
     const httpOptions = {
       headers: this.headers,
       body: {
         url: video.url
       }
     }
-    return this.http.delete<VideoModel>(this.bookmarkUrl, httpOptions).pipe(
+    this.http.delete<VideoModel>(this.bookmarkUrl, httpOptions).pipe(
       map(videoModel => new Video(videoModel.url)),
       catchError((err) => {console.log(err); return of(new Video(""))})
+    ).subscribe(
+      _ =>  this.loadBookmarkList()
+    );
+  }
+
+
+  checkIfBookmarked(video: Video): Observable<boolean> {
+    const url = this.bookmarkUrl + "/check?url=" + video.url;
+    return this.http.get<boolean>(url).pipe(
+      tap(_ => {}),
+      catchError((err) => {console.log(err); return of(false)})
     )
   }
 

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError, map, tap } from 'rxjs';
+import { Observable, of, catchError, map, tap, BehaviorSubject } from 'rxjs';
 
 import Video from './video';
 import VideoModel from './interfaces';
@@ -17,25 +16,32 @@ export class HistoryService {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
+  private historyListSource = new BehaviorSubject<Video[]>([]);
+  public historyList = this.historyListSource.asObservable();
+
   constructor(private http: HttpClient) { }
 
-  getHistoryList(): Observable<Video[]> {
-    return this.http.get<VideoModel[]>(this.historyUrl).pipe(
+  loadHistoryList(): void {
+    this.http.get<VideoModel[]>(this.historyUrl).pipe(
       map(videoModelList => videoModelList.map(
         videoModel => new Video(videoModel.url, videoModel.date)
       )),
       catchError((err) => {console.log(err); return of([])})
-    )
+    ).subscribe(
+      historyList => this.historyListSource.next(historyList)
+    );
   }
 
-  addHistory(video: Video): Observable<Video> {
+  addHistory(video: Video): void {
     const body = {
       url: video.url
     }
-    return this.http.post<VideoModel>(this.historyUrl, body, this.httpOptions).pipe(
+    this.http.post<VideoModel>(this.historyUrl, body, this.httpOptions).pipe(
       map(videoModel => new Video(videoModel.url, videoModel.date)),
       catchError((err) => {console.log(err); return of(new Video(""))})
-    )
+    ).subscribe(
+      _ => this.loadHistoryList()
+    );
   }
 
 }

@@ -15,13 +15,10 @@ export class BookmarksComponent implements OnInit {
   constructor(private bookmarkService: BookmarkService) { }
 
   ngOnInit(): void {
-    this.getBookmarkList();
-  }
-
-  getBookmarkList(): void {
-    this.bookmarkService.getBookmarkList().subscribe(
+    this.bookmarkService.bookmarkList.subscribe(
       bookmarkList => this.videoBookmarks = bookmarkList
-    )
+    );
+    this.bookmarkService.loadBookmarkList();
   }
 
 }

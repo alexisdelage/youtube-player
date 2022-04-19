@@ -43,9 +43,9 @@ export class VideoViewComponent implements OnInit {
         this.safeVideoUrl = this.sanitizer
           .bypassSecurityTrustResourceUrl(embedUrl);
         // add the video in history
-        this.historyService.addHistory(this.video).subscribe();
+        this.historyService.addHistory(this.video);
         // know if the video is bookmarked
-        this.bookmarkService.getBookmarkCheck(this.video).subscribe(
+        this.bookmarkService.checkIfBookmarked(this.video).subscribe(
           res => this.isBookmarked = res
         )
       } else {
@@ -56,15 +56,13 @@ export class VideoViewComponent implements OnInit {
   }
 
   addToBookmarks(): void {
-    this.bookmarkService.addBookmark(this.video!).subscribe(
-      res => this.isBookmarked = true
-    );
+    this.bookmarkService.addBookmark(this.video!);
+    this.isBookmarked = true;
   }
 
   removeFromBookmarks(): void {
-    this.bookmarkService.deleteBookmark(this.video!).subscribe(
-      res => this.isBookmarked = false
-    )
+    this.bookmarkService.deleteBookmark(this.video!);
+    this.isBookmarked = false;
   }
 
 

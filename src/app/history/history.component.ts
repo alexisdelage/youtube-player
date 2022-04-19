@@ -15,13 +15,10 @@ export class HistoryComponent implements OnInit {
   constructor(private historyService: HistoryService) { }
 
   ngOnInit(): void {
-    this.getHistoryList();
-  }
-
-  getHistoryList(): void {
-    this.historyService.getHistoryList().subscribe(
+    this.historyService.historyList.subscribe(
       historyList => this.videoHistory = historyList
-    )
+    );
+    this.historyService.loadHistoryList();
   }
 
 }

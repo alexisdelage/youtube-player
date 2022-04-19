@@ -32,9 +32,11 @@ ul {
         align-items: center;
 
         img {
-          height: 3rem;
+          width: min(10vw, 7rem);
           display: block;
           margin: 8px 5px;
+          aspect-ratio: 16/9;
+          object-fit: cover;
         }
 
         div.text {
