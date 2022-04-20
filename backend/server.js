@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const { buildSchema } = require('graphql');
+
+////////////////////////
+/// MONGODB DATABASE ///
+////////////////////////
 
 // connect to database
 mongoose.connect('mongodb+srv://admin:admin@cluster0.erfky.mongodb.net/youtubePlayer');
@@ -12,67 +18,135 @@ const bookmarkSchema = new mongoose.Schema({
   url: String
 });
 // define models
-const History = mongoose.model('History', historySchema);
-const Bookmark = mongoose.model('Bookmark', bookmarkSchema);
+const HistoryModel = mongoose.model('History', historySchema);
+const BookmarkModel = mongoose.model('Bookmark', bookmarkSchema);
 
+
+//////////////////////////
+/// GRAPHQL DEFINITION ///
+//////////////////////////
+
+const schema = buildSchema(`
+  type Query {
+    history(filter: HistoryInput = {}, order_by: OrderRule = {}): [History!]!
+    bookmark(filter: BookmarkInput = {}, order_by: OrderRule = {}): [Bookmark!]!
+  }
+  type Mutation {
+    addHistory(url: String!): Boolean
+    addBookmark(url: String!): Boolean
+    removeBookmark(url: String!): Boolean
+  }
+  type History {
+    url: String!
+    date: String!
+  }
+  type Bookmark {
+    url: String!
+  }
+  input HistoryInput {
+    url: String
+    date: String
+  }
+  input BookmarkInput {
+    url: String
+  }
+  input OrderRule {
+    url: OrderDirection
+    date: OrderDirection
+  }
+  enum OrderDirection {
+    asc
+    desc
+  }
+`);
+
+const root = {
+  history: getHistory,
+  bookmarks: getBookmark,
+  addHistory: addHistory,
+  addBookmark: addBookmark,
+  removeBookmark: removeBookmark
+}
+
+
+/////////////////////////////
+/// EXPRESS CONFIGURATION ///
+/////////////////////////////
 
 const app = express();
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-app.listen(8000, () => console.log("Server started!"));
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true,
+}));
+app.listen(8000);
+console.log("Running a GraphQL API server at http://localhost:8000/graphql");
+
+
+/////////////////
+/// FUNCTIONS ///
+/////////////////
 
 /**
  * GET history
- * Returns the list of all History objects
+ * Returns a list of History objects
  */
-app.get("/api/history", async (req, res) => {
-    const historyList = await History.find().sort({ date: -1 });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(historyList));
-});
+function getHistory(args) {
+  // get the args
+  let filter = args.filter;
+  let sort = args.order_by;
+  // redefine the sorting arguments in the sort dict
+  for(const key in sort) {
+    switch (sort[key]) {
+      case "asc":
+        sort[key] = 1; break;
+      case "desc":
+        sort[key] = -1; break;
+      default:
+        sort[key] = 0;
+    }
+  }
+  // make the request
+  return HistoryModel.find(filter).sort(sort);
+}
 
 /**
- * GET bookmarks
- * Returns the list of all bookmarks
+ * GET bookmark
+ * Returns a list of Bookmark objects
  */
-app.get("/api/bookmark", async (req, res) => {
-  const bookmarksList = await Bookmark.find();
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(bookmarksList));
-});
-
-
-/**
- * Return a boolean which indicates if an url is already registered
- * as a bookmark or not
- */
-app.post("/api/bookmark/check", async (req, res) => {
-  const videoUrl = req.body.url;
-  const bookmarks = await Bookmark.find({url: videoUrl});
-  const bookmarkExists = bookmarks.length == 0 ? false : true;
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(bookmarkExists));
-});
+ function getBookmark(args) {
+  // get the args
+  let filter = args.filter;
+  let sort = args.order_by;
+  // redefine the sorting arguments in the sort dict
+  for(const key in sort) {
+    switch (sort[key]) {
+      case "asc":
+        sort[key] = 1; break;
+      case "desc":
+        sort[key] = -1; break;
+      default:
+        sort[key] = 0;
+    }
+  }
+  // make the request
+  return BookmarkModel.find(filter).sort(sort);
+}
 
 
 /**
  * POST history
  * From a url given in POST details, save it as a History object in database
  */
-app.post("/api/history", async (req, res) => {
-  const videoUrl = req.body.url;
+async function addHistory(args) {
+  const videoUrl = args.url;
   const now = Date.now();
   let success;
   // we check if there is already the video in the database
-  const sameVideos = await History.find({url: videoUrl});
+  const sameVideos = await HistoryModel.find({url: videoUrl});
   if (sameVideos.length == 0) {
     // if video is not in database, then add it
-    const video = new History({
+    const video = new HistoryModel({
       url: videoUrl,
       date: now
     });
@@ -81,7 +155,7 @@ app.post("/api/history", async (req, res) => {
       .catch(() => false);
   } else {
     // if video is already in database, then update its date to now
-    success = await History.updateOne(
+    success = await HistoryModel.updateOne(
       { url: videoUrl },
       { date: now },
       (err, res) => {if (err) console.log(err)}
@@ -89,46 +163,44 @@ app.post("/api/history", async (req, res) => {
       .then(() => true)
       .catch(() => false);
   }
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(success));
-});
+  return success;
+}
 
 
 /**
  * POST bookmark
  * From a url given in POST details, save it as a Bookmark object in database
  */
-app.post("/api/bookmark", async (req, res) => {
-  const videoUrl = req.body.url;
-  let success;
+async function addBookmark(args) {
+  const videoUrl = args.url;
+  let success = false;
   // check if bookmark already registered
-  const sameBookmarks = await Bookmark.find({url: videoUrl});
+  const sameBookmarks = await BookmarkModel.find({url: videoUrl});
   if (sameBookmarks.length == 0) {
-    const video = new Bookmark({
+    const video = new BookmarkModel({
       url: videoUrl
     })
     success = await video.save()
       .then(() => true)
       .catch(() => false);
   }
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(success));
-})
+  return success;
+}
+
 
 /**
  * DELETE bookmarks
  * From a url given in POST details, delete the corresponding object in database
  */
-app.delete("/api/bookmark", async (req, res) => {
-  const videoUrl = req.body.url;
-  let success = await Bookmark.deleteOne(
+async function removeBookmark(args) {
+  const videoUrl = args.url;
+  let success = await BookmarkModel.deleteOne(
     { url: videoUrl },
     (err) => {if (err) console.log(err)}
   ).clone()
     .then(() => true)
     .catch(() => false);
-  res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(success));
-})
+  return success;
+}
 
 
