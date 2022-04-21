@@ -2,6 +2,24 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.2.
 
+## Run the project
+
+Create a docker image for the backend server:
+```bash
+cd ./backend
+docker build . -t youtubeplayer-back
+docker run -it --rm -p 8000:8000 youtubeplayer-back
+```
+
+Create a docker image for the frontend server:
+```bash
+cd ./frontend
+docker build . -t youtubeplayer-front
+docker run -it --rm -p 80:80 youtubeplayer-front
+```
+
+Open the app at [localhost:80](http://localhost:80).
+
 ## Frontend server
 
 Change your directory to `frontend` to run the following commands.
@@ -35,18 +53,3 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 To run the backend server, go the `backend` directory and run `npm start`.
 
-
-## Use Docker
-
-Create an image for the backend server:
-```bash
-cd ./backend
-docker build . -t youtubeplayer-back
-```
-
-Create an image for the frontend server:
-```bash
-cd ./frontend
-ng build
-docker build . -t youtubeplayer-front
-```
