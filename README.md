@@ -23,7 +23,9 @@ Open the app at [localhost:80](http://localhost:80).
 ## Frontend server
 
 Change your directory to `frontend` to run the following commands.
+### Init the project
 
+Run `npm i` to install all dependencies.
 ### Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
