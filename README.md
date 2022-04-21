@@ -34,3 +34,19 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ## Backend server
 
 To run the backend server, go the `backend` directory and run `npm start`.
+
+
+## Use Docker
+
+Create an image for the backend server:
+```bash
+cd ./backend
+docker build . -t youtubeplayer-back
+```
+
+Create an image for the frontend server:
+```bash
+cd ./frontend
+ng build
+docker build . -t youtubeplayer-front
+```
