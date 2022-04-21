@@ -1,6 +1,16 @@
-interface VideoModel {
-  url: string,
-  date?: Date
+export interface HistoryQuery {
+  history: [
+    {
+      url: string,
+      date: Date
+    }
+  ]
 }
 
-export default VideoModel;
+export interface BookmarkQuery {
+  bookmark: [
+    {
+      url: string
+    }
+  ]
+}

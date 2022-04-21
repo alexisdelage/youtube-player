@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
+const cors = require('cors');
 
 ////////////////////////
 /// MONGODB DATABASE ///
@@ -62,7 +63,7 @@ const schema = buildSchema(`
 
 const root = {
   history: getHistory,
-  bookmarks: getBookmark,
+  bookmark: getBookmark,
   addHistory: addHistory,
   addBookmark: addBookmark,
   removeBookmark: removeBookmark
@@ -74,6 +75,7 @@ const root = {
 /////////////////////////////
 
 const app = express();
+app.use(cors())
 app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: root,

@@ -1,6 +1,5 @@
-import VideoModel from "./interfaces";
 
-export default class Video implements VideoModel {
+export default class Video {
   private _url: string;
   private _date?: Date;
   private _id?: string | null;
